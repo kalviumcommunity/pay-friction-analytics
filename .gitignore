@@ -1,0 +1,35 @@
+# Virtual Environments
+venv/
+.venv/
+ENV/
+env/
+
+# Secrets & Credentials
+.env
+*.key
+*.pem
+.env.example
+
+# Python Cache & Artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+# OS Specific Artifacts
+.DS_Store
+Thumbs.db
+
+# Generated Output / Data (Keep structure, ignore bulky dynamic files if needed)
+data/raw/*.csv
+data/processed/*.csv
+output/*.png
+output/*.csv
+output/*.pdf
+!**/README.md
