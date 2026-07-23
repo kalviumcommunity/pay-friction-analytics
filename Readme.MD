@@ -5,6 +5,12 @@
 This repository enforces a reproducible development environment to ensure all team members execute analytical workflows consistently across different machines.
 
 ---
+## 📊 Key Capabilities
+
+- Analyze payment retry patterns and failure trends
+- Decode bank response codes for better decision-making
+- Identify temporary payment friction vs permanent revenue loss
+- Provide a reproducible analytics workspace for team collaboration
 
 ## � Team Workflow
 
@@ -27,4 +33,4 @@ Follow these steps strictly to replicate the isolated development environment on
 Download the project to your local machine and navigate into the directory:
 ```bash
 git clone (https://github.com/rishiiih/pay-friction-analytics.git)
-cd pay-friction-analytics
+cd pay-friction-analytics       
