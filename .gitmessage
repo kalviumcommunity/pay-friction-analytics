@@ -1,0 +1,13 @@
+# Conventional Commit Template
+#
+# Examples:
+# feat: add churn model training pipeline
+# fix: correct null handling in data profiler
+# docs: update onboarding steps for analysts
+# refactor: extract shared preprocessing logic
+# test: add validation coverage for date parser
+# chore: update project dependencies
+#
+# <type>: <short summary>
+#
+# <optional body>
