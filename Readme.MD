@@ -6,7 +6,20 @@ This repository enforces a reproducible development environment to ensure all te
 
 ---
 
-## 🛠️ Setup Instructions
+## � Team Workflow
+
+This repository now includes a simple, professional team workflow for collaborative development:
+
+- Branching guidance in [CONTRIBUTING.md](CONTRIBUTING.md)
+- Issue templates in [.github/ISSUE_TEMPLATE/](.github/ISSUE_TEMPLATE/)
+- Pull request template in [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md)
+- Conventional commit template in [.gitmessage](.gitmessage)
+
+Use these files to create issues before starting work, branch from main, open pull requests, and write clear commit messages.
+
+---
+
+## �🛠️ Setup Instructions
 
 Follow these steps strictly to replicate the isolated development environment on your local machine.
 
