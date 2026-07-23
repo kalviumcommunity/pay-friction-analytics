@@ -1,11 +1,17 @@
-# Pay friction Analytics
+# PayFriction Analytics
 
-A standardized, reproducible development environment designed for multi-contributor analytics workflows and data product development.
+**Project Overview:** A standardized, end-to-end data product workspace designed to analyze fintech payment retries, decode bank response codes, and empower the finance team to distinguish between temporary payment friction and permanently lost revenue opportunities. 
 
-## Setup
+This repository enforces a reproducible development environment to ensure all team members execute analytical workflows consistently across different machines.
 
-Follow these steps to replicate the exact development workspace on your machine.
+---
 
-1. **Clone the repository:**
-   ```bash
-   git clone (https://github.com/rishiiih/pay-friction-analytics.git)
+## 🛠️ Setup Instructions
+
+Follow these steps strictly to replicate the isolated development environment on your local machine.
+
+### 1. Clone the Repository
+Download the project to your local machine and navigate into the directory:
+```bash
+git clone (https://github.com/rishiiih/pay-friction-analytics.git)
+cd pay-friction-analytics
