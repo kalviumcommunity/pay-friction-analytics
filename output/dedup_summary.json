@@ -1,0 +1,10 @@
+{
+  "rows_before": 3,
+  "rows_after": 2,
+  "rows_removed": 1,
+  "removal_percentage": 33.33,
+  "columns": 4,
+  "nulls_before": 0,
+  "nulls_after": 0,
+  "timestamp": "2026-07-29T15:21:28.885359"
+}
