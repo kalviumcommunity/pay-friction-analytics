@@ -1,0 +1,12 @@
+{
+  "join_type": "left",
+  "left_table": "customers",
+  "right_table": "orders",
+  "join_key": "customer_id",
+  "left_rows": 5,
+  "right_rows": 6,
+  "result_rows": 6,
+  "unmatched_left": 1,
+  "unmatched_right": 1,
+  "reasoning": "Left join was chosen to preserve all customer records, allowing us to identify zero-order customers. Orphaned orders (missing customer_id) are dropped from analysis but logged for data engineering to investigate."
+}
