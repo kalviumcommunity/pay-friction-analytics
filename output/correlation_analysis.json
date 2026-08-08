@@ -1,0 +1,12 @@
+{
+  "support_tickets <-> churn": {
+    "correlation": 0.95,
+    "possible_directions": [
+      "support_tickets -> churn (customer gets frustrated by support process and leaves)",
+      "churn -> support_tickets (angry customers complain right before canceling)",
+      "payment_friction -> both (underlying transaction failures cause the ticket AND the churn)"
+    ],
+    "data_indicates": "Likely payment_friction is the confounder; tickets are a symptom, not the root cause.",
+    "action": "Do not hide the support button. Fix the payment pipeline to reduce the underlying pain."
+  }
+}
