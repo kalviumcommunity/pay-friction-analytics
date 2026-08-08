@@ -1,0 +1,17 @@
+
+    ============================================================
+    REVENUE DISTRIBUTION REPORT
+    ============================================================
+    Skewness: 1.86 → Highly right-skewed
+    Mean:   $1680
+    Median: $51
+    
+    Insight: The mean is heavily distorted by outliers. Most customers are small; few are huge enterprise accounts.
+
+    Kurtosis: 1.97 → Normal tail behavior
+    Max:    $12000
+    Top 1%: $11280
+
+    Business Action: Segment the user base into Small/SMB vs. Enterprise to prevent forecasting errors. Standard marketing should target the median ($51), while account executives should handle the high-tier segment.
+    ============================================================
+    
