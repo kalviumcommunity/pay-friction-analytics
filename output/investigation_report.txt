@@ -1,0 +1,8 @@
+
+ROOT CAUSE INVESTIGATION REPORT
+===============================
+Observation: Success rate dropped on 2026-08-15 at 14:00 UTC.
+Segment Impact: 100% failure in Credit Card transactions.
+Pattern: Stripe API timeout reported in logs.
+Hypothesis: External processor (Stripe) outage.
+Recommendation: Implement multi-processor failover (Adyen).
