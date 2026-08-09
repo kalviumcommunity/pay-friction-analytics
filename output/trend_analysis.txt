@@ -1,0 +1,15 @@
+
+============================================================
+TIME-SERIES TREND ANALYSIS REPORT
+============================================================
+
+Rolling Average Trend (7-Day MA): UP
+Change over the last 2 weeks: +31.1%
+
+Business Implications:
+- The raw daily data is highly volatile (standard deviation of $1122), largely due to severe weekend traffic drops.
+- However, the 7-day rolling average removes this day-of-week seasonality, revealing a strong underlying ACCELERATING trend.
+- Action: Scale up current marketing and server capacity to match the accelerating growth.
+
+Note: Do not make structural business decisions (like discounting) based on single-day drops (e.g., Sunday dips). Always look at the 7-day moving average.
+============================================================
