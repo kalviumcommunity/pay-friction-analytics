@@ -1,0 +1,14 @@
+SEGMENT STRATEGY SUMMARY:
+
+Enterprise (25% of base, $151,667 LTV, 0.0% churn):
+- Highest value, lowest churn.
+- Action: Maintain white-glove premium support and prioritize uptime.
+
+SMB (33% of base, $8,200 LTV, 75.0% churn):
+- Middle value, alarming churn risk due to friction.
+- Action: Overhaul the payment pipeline to reduce failed transactions and drop support ticket volume.
+
+Startup (42% of base, $2,100 LTV, 40.0% churn):
+- Lowest value, moderate churn.
+- Action: Push towards self-service documentation to reduce support costs.
+
