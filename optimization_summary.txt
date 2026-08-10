@@ -1,0 +1,7 @@
+SQL QUERY OPTIMIZATION REPORT
+                     Metric       Original      Optimized
+           Columns Selected  15 (SELECT *)     7 explicit
+          Intermediate Rows    10,000 rows     6,378 rows
+Filters Applied Before Join             No            Yes
+              Nesting Depth       3 levels 1 level (CTEs)
+          Readability Score Hard to follow    Clear steps
