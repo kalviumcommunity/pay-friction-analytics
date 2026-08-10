@@ -1,0 +1,21 @@
+
+============================================================
+JOIN STRATEGY & LINEAGE DOCUMENTATION
+============================================================
+Table Baseline:
+- customers: 4 rows (PK: customer_id)
+- orders: 4 rows (FK: customer_id)
+- order_items: 4 rows (FK: order_id)
+- products: 2 rows (PK: product_id)
+
+Decision 1: customers LEFT JOIN orders
+- Purpose: Retrieve all customers and their lifetime value (including $0 customers).
+- Unmatched Left: 1 customer (Startup) has no orders. Safely retained as $0 LTV.
+- Unmatched Right: 1 order belongs to an invalid customer_id. 
+
+Decision 2: 4-Table INNER JOIN (customers -> orders -> items -> products)
+- Purpose: Attribute exact product revenue to specific customer segments.
+- Row Change: Drops the orphaned order. Retains strict 1-to-1 item lineage.
+- Risk Addressed: Aggregated at the item level to ensure no Cartesian duplication of revenue.
+- Validation: Verified that SUM(line_total) matches order_items baseline (minus the known orphan).
+============================================================
