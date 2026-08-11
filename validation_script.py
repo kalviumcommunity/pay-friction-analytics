@@ -8,9 +8,10 @@ def seed_validation_db(engine):
     """Seed database with realistic dates to test computation drift across month/year boundaries."""
     now = pd.Timestamp.now()
     
+    # Calculate exact previous calendar month date (Month N-1)
     first_of_this_month = pd.Timestamp(year=now.year, month=now.month, day=1)
-    last_month_date = first_of_this_month - pd.Timedelta(days=10)
-    last_year_same_month_date = last_month_date - pd.DateOffset(years=1)
+    last_month_date = first_of_this_month - pd.Timedelta(days=10) # falls into Month N-1
+    last_year_same_month_date = last_month_date - pd.DateOffset(years=1) # falls into Month N-1 previous year
 
     logins_df = pd.DataFrame({
         'user_id': [1, 2, 3, 4, 5],
@@ -23,6 +24,12 @@ def seed_validation_db(engine):
         ]
     })
     
+    # Orders dataset:
+    # Customer 1: Active today (Month N)
+    # Customer 2: Ordered in Month N-1 (July 2026), no order in Month N -> True Churned
+    # Customer 3: Active today (Month N)
+    # Customer 4: Ordered in Month N-1 of PREVIOUS YEAR (July 2025), no order in Month N -> Inactive >1yr
+    # Customer 5: Active today (Month N)
     orders_df = pd.DataFrame({
         'order_id': [101, 102, 103, 104, 105],
         'customer_id': [1, 2, 3, 4, 5],
@@ -70,6 +77,7 @@ def validate_metrics(engine, logins_df=None, orders_df=None, tolerance_pct=0.1):
     py_metric2 = orders_df['order_amount'].mean()
 
     # Metric 3: Customer Churn (Monthly) - Flawed SQL vs Python
+    # Flawed SQL uses strftime('%m') which strips year context
     sql_3_flawed = """
     SELECT COUNT(DISTINCT c1.customer_id) as churned_customers
     FROM (
@@ -85,6 +93,7 @@ def validate_metrics(engine, logins_df=None, orders_df=None, tolerance_pct=0.1):
     """
     sql_metric3_flawed = pd.read_sql(sql_3_flawed, engine).iloc[0, 0]
 
+    # Python exact calendar month calculation
     now = pd.Timestamp.now()
     first_of_this_month = pd.Timestamp(year=now.year, month=now.month, day=1)
     first_of_last_month = (first_of_this_month - pd.Timedelta(days=1)).replace(day=1)

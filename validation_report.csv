@@ -1,0 +1,5 @@
+Metric,SQL_Result,Python_Result,Absolute_Difference,Percent_Difference,Tolerance_Pct,Status,Timestamp
+Active Users (30-day),4.0,4.0,0.0,0.0,0.0,PASS,2026-08-11 15:03:05
+Average Order Value (AOV),160.0,160.0,0.0,0.0,0.1,PASS,2026-08-11 15:03:05
+Customer Churn (Monthly - Flawed SQL),2.0,1.0,1.0,50.0,0.0,FAIL,2026-08-11 15:03:05
+Customer Churn (Refactored SQL),1.0,1.0,0.0,0.0,0.0,PASS,2026-08-11 15:03:05
