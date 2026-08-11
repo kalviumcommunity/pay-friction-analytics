@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------
+// Core Business Entities
+// ---------------------------------------------------------
+
+model Merchant {
+  id           String        @id @default(uuid())
+  name         String
+  industry     String?
+  createdAt    DateTime      @default(now())
+  transactions Transaction[]
+}
+
+model Customer {
+  id              String        @id @default(uuid())
+  email           String        @unique
+  customerSegment String        // e.g., "Enterprise", "SMB", "Startup"
+  createdAt       DateTime      @default(now())
+  transactions    Transaction[]
+}
+
+model PaymentGateway {
+  id        String            @id @default(uuid())
+  name      String            @unique // e.g., "Stripe", "Adyen", "Razorpay"
+  attempts  PaymentAttempt[]
+}
+
+model BankResponseCode {
+  id             String           @id @default(uuid())
+  code           String           @unique // e.g., "00", "51", "54"
+  meaning        String
+  classification String           // "Temporary Friction" or "Permanent Failure"
+  actionRequired String
+  attempts       PaymentAttempt[]
+}
+
+// ---------------------------------------------------------
+// Transaction & Retry Pipeline
+// ---------------------------------------------------------
+
+model Transaction {
+  id            String           @id @default(uuid())
+  amount        Decimal          @db.Decimal(10, 2)
+  currency      String           @default("USD")
+  status        String           // "PENDING", "SUCCESS", "FAILED"
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  // Relations
+  merchantId    String
+  merchant      Merchant         @relation(fields: [merchantId], references: [id])
+  customerId    String
+  customer      Customer         @relation(fields: [customerId], references: [id])
+  attempts      PaymentAttempt[]
+}
+
+model PaymentAttempt {
+  id                 String            @id @default(uuid())
+  attemptNumber      Int               // 1 for initial, 2+ for retries
+  isSuccess          Boolean
+  processedAt        DateTime          @default(now())
+  
+  // Relations
+  transactionId      String
+  transaction        Transaction       @relation(fields: [transactionId], references: [id])
+  gatewayId          String
+  gateway            PaymentGateway    @relation(fields: [gatewayId], references: [id])
+  responseCodeId     String?
+  responseCode       BankResponseCode? @relation(fields: [responseCodeId], references: [id])
+}
