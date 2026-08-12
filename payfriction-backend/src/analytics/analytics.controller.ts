@@ -9,4 +9,19 @@ export class AnalyticsController {
   async getSummary() {
     return this.analyticsService.getDashboardSummary();
   }
+
+  @Get('gateways')
+  async getGateways() {
+    return this.analyticsService.getGatewayPerformance();
+  }
+
+  @Get('errors')
+  async getErrors() {
+    return this.analyticsService.getErrorBreakdown();
+  }
+
+  @Get('retries')
+  async getRetries() {
+    return this.analyticsService.getRetryMetrics();
+  }
 }

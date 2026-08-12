@@ -1,4 +1,7 @@
-import SummaryCards from "@/components/SummaryCards"; // <-- This will also work perfectly
+import SummaryCards from "@/components/SummaryCards";
+import GatewayChart from "@/components/GatewayChart";
+import ErrorTable from "@/components/ErrorTable";
+import RetryMetrics from "@/components/RetryMetrics";
 
 export default function Home() {
   return (
@@ -8,7 +11,17 @@ export default function Home() {
         <p className="text-gray-500 mt-1">Real-time payment failure analytics</p>
       </header>
 
+      {/* Top Level Metrics */}
       <SummaryCards />
+      
+      {/* Recovery Metrics Banner */}
+      <RetryMetrics />
+
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 gap-8">
+        <GatewayChart />
+        <ErrorTable />
+      </div>
     </main>
   );
 }
