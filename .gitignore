@@ -1,4 +1,16 @@
 # Virtual Environments
+
+
+# Database files
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Environment files
+.env
+.env.*
+!.env.example
 venv/
 .venv/
 ENV/
