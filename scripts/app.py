@@ -1,102 +1,129 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
+from datetime import date, timedelta
 
 # Page Configuration
-st.set_page_config(page_title="Data Ingestion & Profiling", layout="wide")
-st.title("Dataset Upload & Dynamic Preview")
-st.markdown("Upload your CSV or JSON data to instantly profile columns, check for nulls, and preview statistics without writing any code.")
+st.set_page_config(page_title="Interactive Data Explorer", layout="wide")
+st.title("Interactive Data Explorer")
+st.markdown("Use the sidebar widgets to filter the dataset. The charts and tables will update instantly.")
 
 # -----------------------------------------------------------------------------
-# TASK 1 & 4: Implement File Upload & Handle Invalid Uploads Gracefully
+# DATA GENERATION (Cached to prevent regeneration on every filter click)
 # -----------------------------------------------------------------------------
-uploaded_file = st.file_uploader("Drop your dataset here", type=["csv", "json"])
+@st.cache_data
+def load_data():
+    np.random.seed(42)
+    dates = [date.today() - timedelta(days=x) for x in range(100)]
+    
+    # Generate 500 rows of dummy data
+    data = {
+        "date": np.random.choice(dates, 500),
+        "segment": np.random.choice(["Enterprise", "Mid-Market", "SMB", "Startup"], 500),
+        "product": np.random.choice(["SaaS Basic", "SaaS Pro", "API Access"], 500),
+        "revenue": np.random.uniform(100, 10000, 500).round(2)
+    }
+    return pd.DataFrame(data)
 
-if uploaded_file is None:
-    st.info("👆 Please upload a CSV or JSON file to begin analysis.")
+df = load_data()
+
+# Convert date column to actual datetime.date for easy filtering
+df["date"] = pd.to_datetime(df["date"]).dt.date
+
+# -----------------------------------------------------------------------------
+# TASK 5: Implement Filter Reset Mechanism
+# -----------------------------------------------------------------------------
+# We clear the session state to wipe out widget memory, then rerun the app
+if st.sidebar.button("🔄 Reset Filters"):
+    st.session_state.clear()
+    st.rerun()
+
+st.sidebar.header("📊 Interactive Filters")
+
+# -----------------------------------------------------------------------------
+# TASK 1 & 3: Implement 3 Widget Types with Meaningful Defaults
+# -----------------------------------------------------------------------------
+
+# Widget 1: Date Range Picker (Default: Full range)
+min_date = df["date"].min()
+max_date = df["date"].max()
+date_range = st.sidebar.date_input(
+    "Select Date Range",
+    value=(min_date, max_date),
+    min_value=min_date,
+    max_value=max_date,
+    key="date_filter"
+)
+
+# Widget 2: Multi-select (Default: All options selected)
+all_segments = sorted(df["segment"].unique().tolist())
+selected_segments = st.sidebar.multiselect(
+    "Select Customer Segments",
+    options=all_segments,
+    default=all_segments,
+    key="segment_filter"
+)
+
+# Widget 3: Slider (Default: Full revenue range)
+min_rev = float(df["revenue"].min())
+max_rev = float(df["revenue"].max())
+selected_rev = st.sidebar.slider(
+    "Revenue Range ($)",
+    min_value=min_rev,
+    max_value=max_rev,
+    value=(min_rev, max_rev),
+    step=100.0,
+    key="rev_filter"
+)
+
+# -----------------------------------------------------------------------------
+# TASK 2: Wire Widgets to Filter the DataFrame
+# -----------------------------------------------------------------------------
+# Handle the date_range tuple (it can temporarily have 1 item while user is clicking)
+if len(date_range) == 2:
+    start_date, end_date = date_range
 else:
-    # Safely attempt to read the file
-    try:
-        if uploaded_file.name.endswith(".csv"):
-            df = pd.read_csv(uploaded_file)
-        elif uploaded_file.name.endswith(".json"):
-            df = pd.read_json(uploaded_file)
-        else:
-            st.error("Unsupported file type. Please upload a CSV or JSON file.")
-            st.stop()
+    start_date, end_date = date_range[0], date_range[0]
 
-        # Check for empty files
-        if len(df) == 0:
-            st.warning("The uploaded file contains headers but no data rows. Please upload a populated dataset.")
-            st.stop()
+# Apply the filter chain
+filtered_df = df[
+    (df["date"] >= start_date) &
+    (df["date"] <= end_date) &
+    (df["segment"].isin(selected_segments)) &
+    (df["revenue"] >= selected_rev[0]) &
+    (df["revenue"] <= selected_rev[1])
+]
 
-    except Exception as e:
-        st.error(f"Failed to read the file. Please ensure it is correctly formatted. \nError details: {e}")
-        st.stop()
+# -----------------------------------------------------------------------------
+# TASK 4: Handle Empty Filter Combinations Gracefully
+# -----------------------------------------------------------------------------
+if len(filtered_df) == 0:
+    st.warning("⚠️ No data matches the current filter combination. Please broaden your selection or click 'Reset Filters'.")
+    st.stop()
 
-    st.success(f"Successfully loaded: **{uploaded_file.name}**")
-    st.divider()
+# -----------------------------------------------------------------------------
+# Downstream Reactive Content
+# -----------------------------------------------------------------------------
+# Metrics
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.metric("Records Found", f"{len(filtered_df):,} / {len(df):,}")
+with col2:
+    st.metric("Total Filtered Revenue", f"${filtered_df['revenue'].sum():,.2f}")
+with col3:
+    st.metric("Average Deal Size", f"${filtered_df['revenue'].mean():,.2f}")
 
-    # -----------------------------------------------------------------------------
-    # TASK 2: Display Automatic Preview (Metadata, Rows, Summary)
-    # -----------------------------------------------------------------------------
-    st.header("1. Dataset Architecture")
-    
-    # Top-level metrics
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.metric("Total Rows", f"{len(df):,}")
-    with col2:
-        st.metric("Total Columns", str(len(df.columns)))
-    with col3:
-        total_cells = df.shape[0] * df.shape[1]
-        null_pct = (df.isnull().sum().sum() / total_cells) * 100
-        st.metric("Global Null %", f"{null_pct:.1f}%", delta_color="inverse")
+st.divider()
 
-    # Dataframe preview
-    st.subheader("Data Preview (First 10 Rows)")
-    st.dataframe(df.head(10), use_container_width=True)
+# Reactive Charts & Tables
+col_chart, col_table = st.columns([1, 1])
 
-    # Column level profiling
-    st.subheader("Column Profiling")
-    summary = pd.DataFrame({
-        "Column Name": df.columns,
-        "Data Type": df.dtypes.astype(str).values,
-        "Populated (Non-Null)": df.notnull().sum().values,
-        "Missing (Null)": df.isnull().sum().values,
-        "Null %": (df.isnull().sum() / len(df) * 100).round(1).values
-    })
-    st.dataframe(summary, use_container_width=True)
-    st.divider()
+with col_chart:
+    st.subheader("Revenue by Segment")
+    # Group by segment for a reactive bar chart
+    segment_rev = filtered_df.groupby("segment")["revenue"].sum()
+    st.bar_chart(segment_rev)
 
-    # -----------------------------------------------------------------------------
-    # TASK 3: Display Basic Statistics
-    # -----------------------------------------------------------------------------
-    st.header("2. Descriptive Statistics")
-    
-    # Isolate numeric columns for describe() to prevent warnings
-    numeric_df = df.select_dtypes(include="number")
-    
-    if not numeric_df.empty:
-        st.dataframe(numeric_df.describe(), use_container_width=True)
-    else:
-        st.info("No numeric columns found in this dataset to generate statistics.")
-    
-    st.divider()
-
-    # -----------------------------------------------------------------------------
-    # TASK 5: Downstream Usage Demonstration
-    # -----------------------------------------------------------------------------
-    st.header("3. Quick Visual Exploration")
-    st.markdown("Select any numeric column below to instantly visualize its distribution across the dataset.")
-    
-    if not numeric_df.empty:
-        selected_col = st.selectbox("Select a metric to visualize:", numeric_df.columns.tolist())
-        # We plot the top 20 most frequent values as a quick bar chart
-        chart_data = df[selected_col].value_counts().head(20)
-        st.bar_chart(chart_data)
-    else:
-        # Fallback to categorical if no numbers exist
-        categorical_cols = df.select_dtypes(exclude="number").columns.tolist()
-        if categorical_cols:
-            selected_col = st.selectbox("Select a category to visualize:", categorical_cols)
-            st.bar_chart(df[selected_col].value_counts().head(20))
+with col_table:
+    st.subheader("Filtered Dataset Preview")
+    st.dataframe(filtered_df.head(15), use_container_width=True)
