@@ -302,3 +302,22 @@ Infrastructure
 ● Multi-currency analytics.
 ● Executive AI insights and summaries.
 ● Integration with ERP, accounting, and BI platforms.
+
+
+
+
+
+## Pipeline Stages
+1 - Ingestion Stage (scripts/pipeline.py): Ingests raw files from local paths or Streamlit memory buffers using @st.cache_data.
+
+2 - Validation Stage (scripts/validate_data.py): Runs schema, data type, non-null, and minimum row count checks. Returns exit code 1 on failure to block bad CI/CD merges.
+
+3 - Cleaning Stage: Strips null records in mandatory primary keys (customer_id, amount), filters negative transactions, and coerces datetime types.
+
+4 - Aggregation Stage: Computes segment-level revenue sums, average order values, and record counts. Saves outputs to data/processed/.
+
+5 - Dashboard Layer (scripts/app.py): Renders reactive layout columns, Plotly distribution charts, and interactive sidebar filter controls.
+
+6 - Active Alerting Layer (scripts/alert_config.py): Continuously evaluates computed metrics against threshold definitions and displays visual st.error() or st.warning() banners.
+
+7 - Delivery Layer (scripts/email_sender.py): Formats structured 3-section summaries (KPIs, Findings, Actions) and sends them via SMTP.
