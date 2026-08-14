@@ -1,0 +1,29 @@
+# .github/workflows/validate.yml
+name: Data Validation Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-schema:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install pandas
+
+      - name: Run Schema Validation
+        # This will execute the script. If the script calls sys.exit(1), this step fails.
+        run: python scripts/validate_data.py data/processed/cleaned_data.csv
