@@ -1,0 +1,52 @@
+# .github/workflows/pipeline.yml
+name: Weekly Data Pipeline
+
+on:
+  schedule:
+    # Runs every Monday at 6:00 AM UTC
+    - cron: "0 6 * * 1"
+  workflow_dispatch: # Allows you to run it manually from the GitHub UI for testing
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    
+    # Give the bot permission to push commits back to your repository
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install pandas
+
+      - name: Run pipeline
+        run: |
+          # Ensure directories exist
+          mkdir -p data/raw
+          mkdir -p data/processed
+          
+          # Create dummy file if it doesn't exist for the action to succeed
+          if [ ! -f data/raw/latest.csv ]; then
+            echo "order_id,customer_id,segment,amount" > data/raw/latest.csv
+            echo "101,C-1,Enterprise,1500" >> data/raw/latest.csv
+          fi
+          
+          # Run the pipeline script
+          python scripts/pipeline.py --input data/raw/latest.csv --output data/processed
+
+      - name: Commit output back to repo
+        run: |
+          git config user.name "Pipeline Bot"
+          git config user.email "bot@kalvium.example.com"
+          git add data/processed/
+          git commit -m "pipeline: automated data refresh" || echo "No changes to commit"
+          git push
