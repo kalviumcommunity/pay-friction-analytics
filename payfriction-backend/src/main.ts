@@ -4,9 +4,7 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
-  // Enable CORS so our Next.js frontend can talk to this API
-  app.enableCors();
-  
-  await app.listen(process.env.PORT ?? 3001);
+  // Force the server to bind to IPv4
+  await app.listen(3000, '127.0.0.1'); 
 }
 bootstrap();
