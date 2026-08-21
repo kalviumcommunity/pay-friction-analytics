@@ -1,0 +1,16 @@
+2026-07-24 15:40:21,984 - INFO - Ingested 20 rows from C:\Users\iamsh\Music\teamrrs\data\raw\sample.csv
+2026-07-24 15:40:21,989 - INFO - Processing: 20 rows -> 20 rows
+2026-07-24 15:40:22,000 - INFO - Output saved: C:\Users\iamsh\Music\teamrrs\output\processed.csv (20 rows)
+2026-07-24 15:40:22,001 - ERROR - Workflow failed: 'charmap' codec can't encode character '\u2713' in position 0: character maps to <undefined>
+2026-07-24 15:40:27,904 - INFO - Ingested 20 rows from C:\Users\iamsh\Music\teamrrs\data\raw\sample.csv
+2026-07-24 15:40:27,908 - INFO - Processing: 20 rows -> 20 rows
+2026-07-24 15:40:27,911 - INFO - Output saved: C:\Users\iamsh\Music\teamrrs\output\processed.csv (20 rows)
+2026-07-24 15:40:28,666 - INFO - Ingested 20 rows from C:\Users\iamsh\Music\teamrrs\data\raw\sample.csv
+2026-07-24 15:40:28,683 - INFO - Processing: 20 rows -> 20 rows
+2026-07-24 15:40:28,686 - INFO - Output saved: C:\Users\iamsh\Music\teamrrs\output\processed.csv (20 rows)
+2026-07-24 15:40:36,677 - INFO - Ingested 20 rows from C:\Users\iamsh\Music\teamrrs\data\raw\sample.csv
+2026-07-24 15:40:36,682 - INFO - Processing: 20 rows -> 20 rows
+2026-07-24 15:40:36,687 - INFO - Output saved: C:\Users\iamsh\Music\teamrrs\output\processed.csv (20 rows)
+2026-07-24 15:40:48,066 - INFO - Ingested 20 rows from C:\Users\iamsh\Music\teamrrs\data\raw\sample.csv
+2026-07-24 15:40:48,071 - INFO - Processing: 20 rows -> 20 rows
+2026-07-24 15:40:48,078 - INFO - Output saved: C:\Users\iamsh\Music\teamrrs\output\processed.csv (20 rows)
